@@ -182,7 +182,8 @@ The example blinks LED2 (PB7) with a simple delay loop.
 
 ## License
 
-This template is provided as-is for educational and development purposes.
+This template is MIT licensed — see [LICENSE](LICENSE). The third-party files below
+keep their own licenses.
 
 Linkerscript, startup & system files are taken from ST repositories:
 
@@ -190,7 +191,8 @@ Linkerscript, startup & system files are taken from ST repositories:
 - [startup_stm32l4r5xx.s](https://github.com/STMicroelectronics/cmsis-device-l4/blob/v1.7.5/Source/Templates/gcc/startup_stm32l4r5xx.s) — cmsis-device-l4 `v1.7.5`, Apache-2.0
 - [system_stm32l4xx.c](https://github.com/STMicroelectronics/cmsis-device-l4/blob/v1.7.5/Source/Templates/system_stm32l4xx.c) — cmsis-device-l4 `v1.7.5`, Apache-2.0
 
-CMSIS headers are vendored under `third_party/`, as unmodified upstream copies:
+CMSIS headers are vendored under `third_party/` as unmodified upstream files, trimmed
+to the subset this target can reach:
 
 | Package | Upstream | Tag | License |
 |---------|----------|-----|---------|
