@@ -5,7 +5,15 @@ cmsis-core       STMicroelectronics/cmsis-core        tag v5.6.0_cm4   Apache-2.
 cmsis-device-l4  STMicroelectronics/cmsis-device-l4   tag v1.7.5       Apache-2.0
 ```
 
-Unmodified upstream copies. Only `Include/` is vendored.
+Unmodified upstream copies. Only the subset of `Include/` this target can reach is
+vendored: every file is byte-identical to upstream, but the directories are not
+complete copies.
+
+Kept from `cmsis-core`: `core_cm4.h` (the core this chip has), the files it pulls in
+(`cmsis_version.h`, `cmsis_compiler.h`, `cmsis_gcc.h`, `mpu_armv7.h`), and the
+`cmsis_armcc/armclang/armclang_ltm/iccarm` headers — unused with GCC, kept so a
+compiler switch needs no re-vendoring. Dropped: other cores, `mpu_armv8.h` and
+`tz_context.h`, none of which are reachable on an Armv7-M target.
 
 `system_stm32l4xx.c` and `startup_stm32l4r5xx.s` in the repo root come from the same
 cmsis-device-l4 tag and must be updated together with these headers.
@@ -22,7 +30,8 @@ git clone --depth 1 -b v5.6.0_cm4 https://github.com/STMicroelectronics/cmsis-co
 
 cp "$tmp"/dev/Include/{stm32l4xx.h,stm32l4r5xx.h,system_stm32l4xx.h} third_party/cmsis-device-l4/Include/
 cp "$tmp"/dev/LICENSE.md third_party/cmsis-device-l4/
-cp "$tmp"/core/Include/*.h third_party/cmsis-core/Include/
+cp "$tmp"/core/Include/{core_cm4.h,cmsis_version.h,cmsis_compiler.h,cmsis_gcc.h,mpu_armv7.h} third_party/cmsis-core/Include/
+cp "$tmp"/core/Include/{cmsis_armcc.h,cmsis_armclang.h,cmsis_armclang_ltm.h,cmsis_iccarm.h} third_party/cmsis-core/Include/
 cp "$tmp"/core/LICENSE.txt third_party/cmsis-core/
 
 cp "$tmp"/dev/Source/Templates/system_stm32l4xx.c .
