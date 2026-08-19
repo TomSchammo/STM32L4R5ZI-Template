@@ -18,6 +18,10 @@ A minimal C++ project template for STM32L4R5ZI microcontroller with CMake build 
 - **st-flash**: For direct flashing (optional)
 - **tmux**: For enhanced debugging experience (optional)
 
+No STM32Cube, CubeMX or CubeIDE installation is required. The CMSIS headers this
+project needs are vendored under `third_party/`, so a fresh clone builds with
+nothing but the ARM toolchain and CMake.
+
 ### Installation on macOS
 
 ```bash
@@ -37,16 +41,31 @@ brew install tmux
 ## Project Structure
 
 ```
-stm_demo_cpp/
+STM32L4R5ZI-Template/
 ├── main.cpp                 # Main C++ application
 ├── system_stm32l4xx.c       # STM32 system configuration
 ├── startup_stm32l4r5xx.s    # ARM startup assembly
 ├── stm32l4r5zi.ld           # Linker script
+├── third_party/             # Vendored CMSIS headers (see third_party/README.md)
+│   ├── cmsis-core/Include/      # CMSIS-Core (Cortex-M) headers
+│   └── cmsis-device-l4/Include/ # STM32L4 device headers
 ├── CMakeLists.txt           # CMake build configuration
 ├── arm-none-eabi-toolchain.cmake  # ARM cross-compilation setup
 ├── Makefile                 # Convenience wrapper
 └── README.md                # This file
 ```
+
+## Design Contract
+
+Nothing is configured implicitly. The template brings the chip up and enters `main()`;
+everything beyond that is explicit.
+
+- `SystemInit` does not configure the PLL and enables no peripheral clocks. It compiles to
+  an empty body, so `main()` is entered on the default MSI clock (4 MHz).
+- Peripheral clocks are enabled by the user in `RCC` — see `enable_port_b()` in `main.cpp`.
+- GPIO pins are configured by the user; none are initialised beforehand.
+- The vendored CMSIS headers are declarations only — register layouts, bit masks and
+  addresses. They emit no code.
 
 ## Building
 
@@ -168,8 +187,18 @@ This template is provided as-is for educational and development purposes.
 Linkerscript, startup & system files are taken from ST repositories:
 
 - [stm32l4r5zi.ld](https://github.com/STMicroelectronics/STM32CubeL4/blob/master/Projects/NUCLEO-L4R5ZI/Templates/STM32CubeIDE/STM32L4R5ZITX_FLASH.ld)
-- [startup_stm32l4r5xx.s](https://github.com/STMicroelectronics/cmsis-device-l4/blob/a2530753e86dd326a75467d28feb92e2ba7d0df2/Source/Templates/gcc/startup_stm32l4r5xx.s)
-- [system_stm32l4xx.c](https://github.com/STMicroelectronics/cmsis-device-l4/blob/a2530753e86dd326a75467d28feb92e2ba7d0df2/Source/Templates/system_stm32l4xx.c)
+- [startup_stm32l4r5xx.s](https://github.com/STMicroelectronics/cmsis-device-l4/blob/v1.7.5/Source/Templates/gcc/startup_stm32l4r5xx.s) — cmsis-device-l4 `v1.7.5`, Apache-2.0
+- [system_stm32l4xx.c](https://github.com/STMicroelectronics/cmsis-device-l4/blob/v1.7.5/Source/Templates/system_stm32l4xx.c) — cmsis-device-l4 `v1.7.5`, Apache-2.0
+
+CMSIS headers are vendored under `third_party/`, as unmodified upstream copies:
+
+| Package | Upstream | Tag | License |
+|---------|----------|-----|---------|
+| `cmsis-core` | [STMicroelectronics/cmsis-core](https://github.com/STMicroelectronics/cmsis-core) | `v5.6.0_cm4` | Apache-2.0 |
+| `cmsis-device-l4` | [STMicroelectronics/cmsis-device-l4](https://github.com/STMicroelectronics/cmsis-device-l4) | `v1.7.5` | Apache-2.0 |
+
+Each package keeps its upstream license file next to the headers. See
+[third_party/README.md](third_party/README.md) for details and refresh instructions.
 
 ## References
 
