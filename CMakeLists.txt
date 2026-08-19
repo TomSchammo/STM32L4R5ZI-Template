@@ -37,6 +37,12 @@ set(SOURCES
 # Create executable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+# Vendored CMSIS headers (see third_party/README.md)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/third_party/cmsis-core/Include
+    ${CMAKE_SOURCE_DIR}/third_party/cmsis-device-l4/Include
+)
+
 # Set startup file as assembly
 set_source_files_properties(startup_stm32l4r5xx.s PROPERTIES LANGUAGE ASM)
 
