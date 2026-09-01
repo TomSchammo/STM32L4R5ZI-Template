@@ -55,6 +55,7 @@ gdb: all
 		-ex 'monitor halt' \
 		-ex 'monitor reset halt' \
 		-ex 'load' \
+		-ex 'monitor reset halt' \
 		-ex 'break main' \
 		-ex 'continue'
 
