@@ -3,6 +3,8 @@
 
 A minimal C++ project template for STM32L4R5ZI microcontroller with CMake build system and integrated debugging support.
 
+*AI Disclaimer:* LLMs (Claude Opus 5) have been used to improve the docs and gather some missing third-party dependencies.
+
 ## Features
 
 - **C++17** support with proper ARM cross-compilation
